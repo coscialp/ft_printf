@@ -6,7 +6,7 @@
 /*   By: coscialp <coscialp@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/10/13 17:01:56 by coscialp     #+#   ##    ##    #+#       */
-/*   Updated: 2019/10/26 20:23:21 by coscialp    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/10/30 14:12:53 by coscialp    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,42 +42,17 @@
 int		ft_printf(const char *fmt, ...)
 {
 	va_list		ap;
-	t_printf	pf;
-	size_t		i;
-	size_t		field;
+	t_printf	*pf;
+	char		*fmt_tmp;
 
-	i = 0;
-	field = 0;
-	pf = init_struct(pf);
+	if (!(pf = (t_printf*)malloc(sizeof(t_printf))))
+		return (-1);
+	init_struct(pf);
+	fmt_tmp = ft_strdup(fmt);
 	va_start(ap, fmt);
-	while (fmt[i])
-	{
-		if (fmt[i] == '%' && (pf.current_flag = is_flag(fmt[i + 1], pf.flags)))
-			ft_putstr("Cas non traitee");
-		if (fmt[i] == '%' && ft_isdigit(fmt[i + 1]))
-		{
-			pf.width = ft_atoi((char*)fmt + i + 1);
-			//fmt = delete_flags((char*)fmt, i + 1);
-			fmt = delete_width_field((char*)fmt, (char*)fmt + i + 1, i + 1);
-		}
-		if (fmt[i] == '%' && (pf.curr_conv = is_flag(fmt[i + 1], pf.convert)))
-		{
-			pf.current_string = convert_string(fmt[i + 1], pf, ap);
-			pf.current_len = ft_strlen(pf.current_string);
-			pf.return_size += pf.current_len;
-			if (pf.current_flag == 0 && pf.width != 0)
-			{
-				while (field++ < (pf.width - pf.current_len))
-					ft_putchar(' ');
-			}
-			ft_putstr(pf.current_string);
-			ft_strdel(&pf.current_string);
-			i++;
-		}
-		else
-			ft_putchar(fmt[i]);
-		i++;
-	}
+	parser_fmt(pf, ap, fmt_tmp);
+	free(fmt_tmp);
+	free_struct(pf);
 	va_end(ap);
-	return (i);
+	return (0);
 }

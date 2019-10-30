@@ -6,7 +6,7 @@
 /*   By: coscialp <coscialp@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/10/26 19:28:35 by coscialp     #+#   ##    ##    #+#       */
-/*   Updated: 2019/10/26 20:26:26 by coscialp    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/10/28 15:55:13 by coscialp    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -25,18 +25,13 @@ char		*delete_width_field(char *str, char *nbr, size_t start)
 	x = 0;
 	while (ft_isdigit(nbr[x]))
 		x++;
-	if(!(tmp = (char *)malloc(sizeof(char) * (ft_strlen((char*)str) - (x + 1)))))
+	if (!(tmp = (char *)malloc(sizeof(char) * (ft_strlen(str) - x + 1))))
 		return (NULL);
 	while (start--)
 		tmp[j++] = str[i++];
 	i += x;
-	while (str[i])
-	{
-		tmp[j] = str[i];
-		i++;
-		j++;
-	}
-	tmp[j] = '\0';
-	str = tmp;
+	ft_memcpy(tmp + j, str + i, ft_strlen(str + i) + 1);
+	ft_memcpy(str, tmp, ft_strlen(tmp) + 1);
+	free(tmp);
 	return (str);
 }
